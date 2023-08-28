@@ -1,6 +1,6 @@
 {
   "name": "@n-octo-n/n8n-nodes-curl",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Make HTTP requests by calling cURL, instead of the Node.js HTTP stack.",
   "keywords": [
     "n8n-community-node-package",
@@ -33,6 +33,7 @@
     "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes package.json"
   },
   "files": [
+    "bin",
     "dist"
   ],
   "n8n": {

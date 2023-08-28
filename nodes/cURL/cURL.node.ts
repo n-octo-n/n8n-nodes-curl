@@ -10,7 +10,7 @@ import {
 } from 'n8n-workflow';
 
 import { exec } from 'child_process';
-import { existsSync, chmodSync, createWriteStream } from 'fs';
+import { existsSync, mkdirSync, chmodSync, createWriteStream } from 'fs';
 import { pipeline } from 'node:stream/promises';
 import { createGunzip } from 'node:zlib';
 
@@ -50,8 +50,12 @@ async function execPromise(command: string): Promise<IExecReturnData> {
 }
 
 async function getCurlPath(execFunctions: IExecuteFunctions): Promise<string> {
-	const path = `${__dirname}/../../../bin/curl/${process.arch}`;
+	const folder = `${__dirname}/../../../bin/curl`;
+	const path = `${folder}/${process.arch}.bin`;
 	if (!existsSync(path)) {
+		if (!existsSync(folder)) {
+			mkdirSync(folder, { recursive: true });
+		}
 		const response = await execFunctions.helpers.httpRequest({
 			url: `https://github.com/n-octo-n/n8n-nodes-curl/raw/static-curl/bin/curl/${process.arch}.gz`,
 			encoding: 'stream',

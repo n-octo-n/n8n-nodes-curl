@@ -9,7 +9,7 @@ The statically-compiled cURL binaries used by this node are provided by [stunnel
 [Installation](#installation)  
 [Compatibility](#compatibility)  
 [Usage](#usage)  
-[Quirks](#quirks)
+[Quirks](#quirks)  
 [Resources](#resources)  
 
 ## Installation
@@ -40,6 +40,7 @@ On first use, the node automatically downloads the correct cURL binary for your 
 ## Quirks
 
 * Currently, this node only supports dealing with text data. If any HTTP endpoint you call with this node returns binary data, there's no guarantee that the result will be fine.
+* Currently, only Linux hosts are supported. All kinds of containers work fine, but Windows and macOS don't work yet.
 
 ## Resources
 
