@@ -1,27 +1,35 @@
 {
-  "name": "n8n-nodes-<...>",
-  "version": "0.1.0",
-  "description": "",
+  "name": "@n-octo-n/n8n-nodes-curl",
+  "version": "0.0.1",
+  "description": "Make HTTP requests by calling cURL, instead of the Node.js HTTP stack.",
   "keywords": [
-    "n8n-community-node-package"
+    "n8n-community-node-package",
+    "curl",
+    "libcurl",
+    "api",
+    "request",
+    "url",
+    "http",
+    "https",
+    "network"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/n-octo-n/n8n-nodes-curl",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Octt",
+    "email": "octt-dev@spacc.eu.org"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/<...>/n8n-nodes-<...>.git"
+    "url": "https://github.com/n-octo-n/n8n-nodes-curl.git"
   },
   "main": "index.js",
   "scripts": {
     "build": "tsc && gulp build:icons",
     "dev": "tsc --watch",
-    "format": "prettier nodes credentials --write",
-    "lint": "eslint nodes credentials package.json",
-    "lintfix": "eslint nodes credentials package.json --fix",
+    "format": "prettier nodes --write",
+    "lint": "eslint nodes package.json",
+    "lintfix": "eslint nodes package.json --fix",
     "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
   },
   "files": [
@@ -29,13 +37,8 @@
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,
-    "credentials": [
-      "dist/credentials/ExampleCredentialsApi.credentials.js",
-      "dist/credentials/HttpBinApi.credentials.js"
-    ],
     "nodes": [
-      "dist/nodes/ExampleNode/ExampleNode.node.js",
-      "dist/nodes/HttpBin/HttpBin.node.js"
+      "dist/nodes/cURL/cURL.node.js"
     ]
   },
   "devDependencies": {

@@ -1,47 +1,49 @@
-![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
+# n8n-nodes-curl
 
-# n8n-nodes-starter
+This n8n node lets you call out to the cURL binary to do any kind of supported HTTP operation, via the standard `curl` command-line syntax.
 
-This repo contains example nodes to help you get started building your own custom integrations for [n8n](n8n.io). It includes the node linter and other dependencies.
+[n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
 
-To make your custom node available to the community, you must create it as an npm package, and [submit it to the npm registry](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry).
+The statically-compiled cURL binaries used by this node are provided by [stunnel/static-curl](https://github.com/stunnel/static-curl). Refer to that repository for a list of the features provided by the binaries.
 
-## Prerequisites
+[Installation](#installation)  
+[Compatibility](#compatibility)  
+[Usage](#usage)  
+[Quirks](#quirks)
+[Resources](#resources)  
 
-You need the following installed on your development machine:
+## Installation
 
-* [git](https://git-scm.com/downloads)
-* Node.js and npm. Minimum version Node 16. You can find instructions on how to install both using nvm (Node Version Manager) for Linux, Mac, and WSL [here](https://github.com/nvm-sh/nvm). For Windows users, refer to Microsoft's guide to [Install NodeJS on Windows](https://docs.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-windows).
-* Install n8n with:
-	```
-	npm install n8n -g
-	```
-* Recommended: follow n8n's guide to [set up your development environment](https://docs.n8n.io/integrations/creating-nodes/build/node-development-environment/).
+Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
 
+## Compatibility
 
-## Using this starter
+Tested on n8n `1.4.0`.
 
-These are the basic steps for working with the starter. For detailed guidance on creating and publishing nodes, refer to the [documentation](https://docs.n8n.io/integrations/creating-nodes/).
+## Usage
 
-1. [Generate a new repository](https://github.com/n8n-io/n8n-nodes-starter/generate) from this template repository.
-2. Clone your new repo:
-    ```
-    git clone https://github.com/<your organization>/<your-repo-name>.git
-    ```
-3. Run `npm i` to install dependencies.
-4. Open the project in your editor.
-5. Browse the examples in `/nodes` and `/credentials`. Modify the examples, or replace them with your own nodes.
-6. Update the `package.json` to match your details.
-7. Run `npm run lint` to check for errors or `npm run lintfix` to automatically fix errors when possible.
-8. Test your node locally. Refer to [Run your node locally](https://docs.n8n.io/integrations/creating-nodes/test/run-node-locally/) for guidance.
-9. Replace this README with documentation for your node. Use the [README_TEMPLATE](README_TEMPLATE.md) to get started.
-10. Update the LICENSE file to use your details.
-11. [Publish](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry) your package to npm.
+This node simply provides an input field to pass shell command-line arguments to cURL, and outputs the following object in case of success:
+```
+{ key           | example
+----------------|----------------------------------------------------
+  data          | <p>This is not the string you were expecting.</p>
+  statusCode    | 200
+  statusMessage | OK
+  headers       | { "content-type": "text/html; charset=utf-8" }
+}
+```
 
-## More information
+Be careful of what data you pass to the input field of this node, as everything is simply handed to the system shell to be passed to cURL. Be especially mindful of using shell quotes and escapes when needed; use JavaScript functions if you need to filter data.
 
-Refer to our [documentation on creating nodes](https://docs.n8n.io/integrations/creating-nodes/) for detailed information on building your own nodes.
+On first use, the node automatically downloads the correct cURL binary for your system architecture (~3 MB, but varies), then stores it for future use. Just wait if it seems like the node takes a while to elaborate.
 
-## License
+## Quirks
 
-[MIT](https://github.com/n8n-io/n8n-nodes-starter/blob/master/LICENSE.md)
+* Currently, this node only supports dealing with text data. If any HTTP endpoint you call with this node returns binary data, there's no guarantee that the result will be fine.
+
+## Resources
+
+* [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
+* [cURL documentation](https://curl.se/docs/)
+	* [curl | tldr pages](https://tldr.inbrowser.app/pages/common/curl)
+
