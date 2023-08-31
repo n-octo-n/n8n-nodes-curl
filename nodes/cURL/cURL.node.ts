@@ -18,33 +18,27 @@ export interface ICurlReturnData {
 	data: string;
 	statusCode: number;
 	statusMessage: string;
-	headers: {[key: string]: (string|string[])},
+	headers: {[key: string]: (string|string[])};
+	setCookie?: {[key: string]: any};
 }
 
 interface IExecReturnData {
-	exitCode: number;
 	error?: Error;
-	stderr: string;
 	stdout: string;
 }
 
 async function execPromise(command: string): Promise<IExecReturnData> {
 	const returnData: IExecReturnData = {
 		error: undefined,
-		exitCode: 0,
-		stderr: '',
 		stdout: '',
 	};
 	return new Promise((resolve, _reject) => {
 		exec(command, { cwd: process.cwd() }, (error, stdout, stderr) => {
 			returnData.stdout = stdout.trim();
-			returnData.stderr = stderr.trim();
 			if (error) {
 				returnData.error = error;
 			}
 			resolve(returnData);
-		}).on('exit', (code) => {
-			returnData.exitCode = code || 0;
 		});
 	});
 }
@@ -76,7 +70,7 @@ async function handleCurlResult(stdout: string): Promise<ICurlReturnData> {
 		headers: {},
 	};
 	lines = lines.slice(1);
-	for (let line of lines) {
+	for (const line of lines) {
 		lines = lines.slice(1);
 		if (line.trim() === '') {
 			break;
@@ -94,7 +88,22 @@ async function handleCurlResult(stdout: string): Promise<ICurlReturnData> {
 			};
 		}
 	}
-	return { ...result, data: lines.join('\n') };
+	if (result.headers['set-cookie']) {
+		result.setCookie = { array: [], string: '', object: {} };
+		for (const cookie of result.headers['set-cookie']) {
+			const parts = cookie.split(';');
+			const namevalue = parts[0].split('=');
+			result.setCookie.object[namevalue[0]] = { value: namevalue[1] };
+			result.setCookie.array = [ ...result.setCookie.array, parts[0] ];
+			for (const part of parts.slice(1)) {
+				const attrvalue = part.split('=');
+				result.setCookie.object[namevalue[0]][attrvalue[0].toLowerCase()] = (attrvalue.length > 1 ? attrvalue[1] : true);
+			}
+		}
+		result.setCookie.string = result.setCookie.array.join('; ');
+	}
+	result.data = lines.join('\n');
+	return { ...result };
 }
 
 export class cURL implements INodeType {
@@ -136,8 +145,7 @@ export class cURL implements INodeType {
 				if (cmdlineLower.slice(0, 5).trim() === 'curl') {
 					cmdline = cmdline.slice(0, 5);
 				}
-				const { error, exitCode, stdout, stderr } = await execPromise(`${await getCurlPath(this)} --include ${cmdline}`);
-				exitCode; stderr;
+				const { error, stdout } = await execPromise(`${await getCurlPath(this)} --include ${cmdline}`);
 				const curled = await handleCurlResult(stdout);
 				if (error !== undefined) {
 					throw new NodeOperationError(this.getNode(), error.message, { itemIndex });

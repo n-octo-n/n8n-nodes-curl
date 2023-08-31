@@ -14,11 +14,11 @@ The statically-compiled cURL binaries used by this node are provided by [stunnel
 
 ## Installation
 
-Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
+Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation. The npm name for this package is `@n-octo-n/n8n-nodes-curl`.
 
 ## Compatibility
 
-Tested on n8n `1.4.0`.
+Tested on n8n `1.4.0` as of 2023/08/29.
 
 ## Usage
 
@@ -30,6 +30,16 @@ This node simply provides an input field to pass shell command-line arguments to
   statusCode    | 200
   statusMessage | OK
   headers       | { "content-type": "text/html; charset=utf-8" }
+}
+```
+
+In case the response includes a `set-cookie` header, the node's output will also include a `setCookie` key with the following content, that allows for easy retrieval of all cookies sent by the server within your workflow:
+```
+{ key    | example
+---------|----------------------------------------------------
+  array  | [ "Yummy=1", "SessionId=cafebabe" ]
+  string | "Yummy=1; SessionId=cafebabe"
+  object | { "Yummy": { "value": "1" }, "SessionId": { "value": "cafebabe", "domain": "example.com" } }
 }
 ```
 
